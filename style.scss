@@ -1,0 +1,259 @@
+$blue: #049cd8;
+$sky: #63b4f5;
+$yellow: #fbd000;
+$red: #e52521;
+$green: #43b047;
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #63b4f5;
+}
+
+body {
+  background-color: $sky;
+  color: white;
+}
+
+.container {
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .stage {
+    position: relative;
+    flex: 1;
+
+    header {
+      width: 100%;
+      margin: 64px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      h1,
+      h2 {
+        font-family: "Press Start 2P", sans-serif;
+        text-align: center;
+      }
+
+      h1 {
+        text-transform: uppercase;
+        font-size: 64px;
+        text-shadow: 0px 1px $red, 1px 2px $red, 2px 3px $red, 3px 4px $red,
+          4px 5px $red, 8px 9px rgba(black, 0.1);
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        font-size: 16px;
+        line-height: 20px;
+        margin-bottom: 10px;
+      }
+
+      p.info {
+        font-family: "Press Start 2P", sans-serif;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: white;
+      }
+
+      @media screen and (max-width: 639px) {
+        max-width: 400px;
+
+        h1 {
+          font-size: 48px;
+        }
+
+        h2 {
+          font-size: 12px;
+          line-height: 16px;
+          margin-bottom: 10px;
+        }
+      }
+
+      @media screen and (max-width: 399px) {
+        max-width: 300px;
+
+        h1 {
+          font-size: 32px;
+        }
+
+        h2 {
+          font-size: 15px;
+          line-height: 14px;
+          margin-bottom: 10px;
+        }
+      }
+    }
+
+    #events {
+      position: absolute;
+      bottom: 0;
+      height: 100px;
+      left: 50vw;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+      transition-property: transform;
+      transition-timing-function: ease-in-out;
+
+      .event {
+        position: relative;
+        flex: 0 0 50px;
+        width: 50px;
+        height: 48px;
+        margin-left: 100px;
+        cursor: pointer;
+        background-color: $green;
+        background-image: url("./assets/greenxyinia.png");
+        background-size: 100%;
+
+        &::before,
+        &::after {
+          position: absolute;
+          font-family: "Press Start 2P", sans-serif;
+        }
+
+        &::before {
+          content: attr(data-month);
+          font-size: 15px;
+          text-transform: uppercase;
+          line-height: 15px;
+          text-align: center;
+          color: white;
+          top: 0;
+          left: 50%;
+          transform: translate(-50%, -150%);
+        }
+
+        &::after {
+          content: attr(data-title);
+          min-width: 200px;
+          font-size: 16px;
+          line-height: 18px;
+          text-align: center;
+          color: black;
+          top: 0;
+          left: 50%;
+          transform: translate(-50%, -40%) scale(0);
+          background-color: white;
+          padding: 10px;
+          border: 4px solid $green;
+          transition: transform 150ms ease-out;
+        }
+
+        &.active {
+          &::after {
+            display: block;
+            transition: transform 500ms steps(6, end);
+            transform: translate(-50%, calc(-100% - 50px)) scale(1);
+          }
+        }
+      }
+    }
+  }
+
+  .ground {
+    position: relative;
+    flex: 0 0 30vh;
+    transition: background-position;
+    transition-timing-function: ease-in-out;
+    margin-top: auto;
+    background-color: brown;
+    background-position: 0px 32px;
+    background-image: url("./assets/ground.png");
+
+    .grass {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 32px;
+      transition-property: background-position;
+      transition-timing-function: ease-in-out;
+      background-image: url("./assets/grass.png");
+    }
+  }
+}
+
+.mario {
+  position: absolute;
+  width: 32px;
+  height: 48px;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  animation-fill-mode: forwards;
+  background-image: url("./assets/mario.png");
+
+  $leftPos: 15%;
+  $rightPos: 85%;
+  $walkSpeed: 0.2s;
+
+  @keyframes walk-left-loop {
+    0% {
+      background-position: 0;
+    }
+    100% {
+      background-position: -2 * 32px;
+    }
+  }
+  @keyframes walk-right-loop {
+    0% {
+      background-position: -4 * 32px;
+    }
+    100% {
+      background-position: -6 * 32px;
+    }
+  }
+  @keyframes search {
+    0% {
+      background-position: -2 * 32px;
+    }
+    100% {
+      background-position: -4 * 32px;
+    }
+  }
+  @keyframes walk-left {
+    0% {
+      left: $rightPos;
+    }
+    100% {
+      left: $leftPos;
+    }
+  }
+  @keyframes walk-right {
+    0% {
+      left: $leftPos;
+    }
+    100% {
+      left: $rightPos;
+    }
+  }
+
+  &.idle {
+    animation: none;
+    background-position: -6 * 32px;
+  }
+
+  &.walk-left {
+    animation: walk-left-loop $walkSpeed steps(2) infinite;
+  }
+
+  &.walk-right {
+    animation: walk-right-loop $walkSpeed steps(2) infinite;
+  }
+
+  &.search-left {
+    animation: search 2s steps(2) infinite;
+  }
+
+  &.search-right {
+    animation: search 2s steps(2) infinite;
+  }
+}
